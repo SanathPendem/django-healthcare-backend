@@ -21,7 +21,7 @@ Django/
 ├── doctors/            # Doctor Directory API (viewable by all, editable by creator/admin)
 ├── mappings/           # Patient-Doctor assignment mappings with duplicate checks
 ├── tests/              # Automated unit and integration test suite
-├── .env.example        # Environment variable template
+├── .env.sample         # Environment variable template
 ├── requirements.txt    # Project dependencies
 ├── postman_collection.json # Ready-to-import Postman API collection
 └── manage.py           # Django administrative script
@@ -52,10 +52,10 @@ pip install -r requirements.txt
 
 ### 3. Environment Configuration
 
-Copy `.env.example` to `.env`:
+Copy `.env.sample` to `.env`:
 
 ```bash
-cp .env.example .env
+cp .env.sample .env
 ```
 
 `.env` configuration defaults:
