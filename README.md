@@ -63,12 +63,10 @@ cp .env.example .env
 SECRET_KEY=django-insecure-healthcare-backend-local-dev-secret-key-2026
 DEBUG=True
 ALLOWED_HOSTS=localhost,127.0.0.1,0.0.0.0
-DATABASE_URL=sqlite:///db.sqlite3
+DATABASE_URL=postgresql://postgres:postgres@localhost:5432/healthcare_db
 ACCESS_TOKEN_LIFETIME_MINUTES=60
 REFRESH_TOKEN_LIFETIME_DAYS=1
 ```
-
-*To connect PostgreSQL in production, set `DATABASE_URL=postgresql://user:password@localhost:5432/healthcare_db`.*
 
 ### 4. Run Migrations & Create Superuser
 
