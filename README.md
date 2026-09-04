@@ -1,209 +1,196 @@
-# Production-Grade Django Healthcare Backend System
+# Healthcare Backend API
 
-A robust, enterprise-grade Django REST Framework (DRF) backend system designed for healthcare management. It features JWT authentication (`djangorestframework-simplejwt`), custom user management with email credentials, patient isolation security, doctor directory management, and patient-doctor assignment mappings.
+A Django REST Framework backend for managing users, patients, doctors, and patient-doctor assignments with JWT authentication and PostgreSQL.
 
----
+## Tech Stack
 
-## Tech Stack & Architecture
+- Python
+- Django
+- Django REST Framework
+- PostgreSQL
+- JWT Authentication
+- Simple JWT
+- python-dotenv
 
-- **Language:** Python 3.9+ (Tested on Python 3.11)
-- **Framework:** Django 5.1 & Django REST Framework (DRF)
-- **Database:** PostgreSQL (with SQLite fallback for local development out-of-the-box via `dj-database-url`)
-- **Authentication:** JWT via `djangorestframework-simplejwt`
-- **Configuration:** Environment variables managed via `python-dotenv` & `.env`
+## Features
 
-### Apps Architecture
+- JWT authentication
+- Custom user model with email authentication
+- Patient CRUD operations
+- Patient ownership and access control
+- Doctor CRUD operations
+- Patient-doctor assignments
+- Duplicate mapping prevention
+- Input validation
+- PostgreSQL database
+- Automated tests
+
+## Project Structure
+
+```text
+healthcare-backend/
+├── config/
+├── users/
+├── patients/
+├── doctors/
+├── mappings/
+├── tests/
+├── manage.py
+├── requirements.txt
+├── .env.example
+└── postman_collection.json
 ```
-Django/
-├── config/             # Django settings, WSGI, ASGI, and root URL routing
-├── users/              # Custom User model (email authentication), Register & Login APIs
-├── patients/           # Patient CRUD API with creator-ownership authorization
-├── doctors/            # Doctor Directory API (viewable by all, editable by creator/admin)
-├── mappings/           # Patient-Doctor assignment mappings with duplicate checks
-├── tests/              # Automated unit and integration test suite
-├── .env.sample         # Environment variable template
-├── requirements.txt    # Project dependencies
-├── postman_collection.json # Ready-to-import Postman API collection
-└── manage.py           # Django administrative script
+
+## Setup / Installation
+
+```text
+Create virtual environment
+        ↓
+Install dependencies
+        ↓
+Configure .env
+        ↓
+Create PostgreSQL database
+        ↓
+Run migrations
+        ↓
+Create superuser
+        ↓
+Run server
 ```
 
----
-
-## Local Setup & Quickstart Guide
-
-### 1. Clone & Set Up Virtual Environment
+### Commands
 
 ```bash
 # Create virtual environment
 python -m venv venv
 
 # Activate virtual environment
-# On Windows (PowerShell):
-.\venv\Scripts\Activate.ps1
-# On Linux/macOS:
-source venv/bin/activate
-```
+# Windows:
+.\venv\Scripts\activate
+# Linux/macOS:
+# source venv/bin/activate
 
-### 2. Install Dependencies
-
-```bash
+# Install dependencies
 pip install -r requirements.txt
-```
 
-### 3. Environment Configuration
+# Configure .env
+cp .env.example .env
 
-Copy `.env.sample` to `.env`:
-
-```bash
-cp .env.sample .env
-```
-
-`.env` configuration defaults:
-```env
-SECRET_KEY=django-insecure-healthcare-backend-local-dev-secret-key-2026
-DEBUG=True
-ALLOWED_HOSTS=localhost,127.0.0.1,0.0.0.0
-DATABASE_URL=postgresql://postgres:postgres@localhost:5432/healthcare_db
-ACCESS_TOKEN_LIFETIME_MINUTES=60
-REFRESH_TOKEN_LIFETIME_DAYS=1
-```
-
-### 4. Run Migrations & Create Superuser
-
-```bash
-python manage.py makemigrations
+# Run migrations
 python manage.py migrate
+
+# Create superuser
 python manage.py createsuperuser
-```
 
-### 5. Run Development Server
-
-```bash
+# Run server
 python manage.py runserver
 ```
 
-The server will start at `http://127.0.0.1:8000/`.
+## Environment Variables
 
----
+Show `.env.example`:
 
-## API Endpoints Specification
+```env
+SECRET_KEY=your-secret-key
+DEBUG=True
 
-### Authentication (`/api/auth/`)
-| Method | Endpoint | Description | Access |
-|---|---|---|---|
-| `POST` | `/api/auth/register/` | Register new user (email, name, password) | Public |
-| `POST` | `/api/auth/login/` | Authenticate & receive JWT access + refresh tokens | Public |
-| `POST` | `/api/auth/token/refresh/` | Refresh expired access token | Public |
-
-### Patients (`/api/patients/`)
-| Method | Endpoint | Description | Access |
-|---|---|---|---|
-| `POST` | `/api/patients/` | Create a new patient record | Authenticated |
-| `GET` | `/api/patients/` | List all patients created by the authenticated user | Owner / Admin |
-| `GET` | `/api/patients/<id>/` | Retrieve specific patient details | Owner / Admin |
-| `PUT` | `/api/patients/<id>/` | Update patient record | Owner / Admin |
-| `DELETE` | `/api/patients/<id>/` | Delete patient record | Owner / Admin |
-
-### Doctors (`/api/doctors/`)
-| Method | Endpoint | Description | Access |
-|---|---|---|---|
-| `POST` | `/api/doctors/` | Add a doctor to directory | Authenticated |
-| `GET` | `/api/doctors/` | List all doctors in directory | Authenticated |
-| `GET` | `/api/doctors/<id>/` | Retrieve specific doctor details | Authenticated |
-| `PUT` | `/api/doctors/<id>/` | Update doctor details | Creator / Admin |
-| `DELETE` | `/api/doctors/<id>/` | Delete doctor record | Creator / Admin |
-
-### Mappings (`/api/mappings/`)
-| Method | Endpoint | Description | Access |
-|---|---|---|---|
-| `POST` | `/api/mappings/` | Assign doctor to patient | Patient Owner / Admin |
-| `GET` | `/api/mappings/` | List all patient-doctor mappings | Authenticated |
-| `GET` | `/api/mappings/<patient_id>/` | List all doctors assigned to a patient | Patient Owner / Admin |
-| `DELETE` | `/api/mappings/<id>/` | Remove doctor-patient mapping | Patient Owner / Admin |
-
----
-
-## Example `curl` Commands
-
-### 1. Register User
-```bash
-curl -X POST http://127.0.0.1:8000/api/auth/register/ \
-  -H "Content-Type: application/json" \
-  -d '{
-    "name": "Dr. Sarah Connor",
-    "email": "sarah@example.com",
-    "password": "SecurePassword123!"
-  }'
+DB_NAME=healthcare_db
+DB_USER=postgres
+DB_PASSWORD=your-password
+DB_HOST=localhost
+DB_PORT=5432
 ```
 
-### 2. Login User
-```bash
-curl -X POST http://127.0.0.1:8000/api/auth/login/ \
-  -H "Content-Type: application/json" \
-  -d '{
-    "email": "sarah@example.com",
-    "password": "SecurePassword123!"
-  }'
+> Never put your real `.env` in GitHub.
+
+## API Endpoints
+
+### Authentication
+
+| Method | Endpoint | Description |
+|---|---|---|
+| POST | `/api/auth/register/` | Register user |
+| POST | `/api/auth/login/` | Login |
+| POST | `/api/auth/token/refresh/` | Refresh token |
+
+### Patients
+
+| Method | Endpoint | Description |
+|---|---|---|
+| POST | `/api/patients/` | Create patient |
+| GET | `/api/patients/` | List own patients |
+| GET | `/api/patients/<id>/` | Get patient |
+| PUT | `/api/patients/<id>/` | Update patient |
+| DELETE | `/api/patients/<id>/` | Delete patient |
+
+### Doctors
+
+| Method | Endpoint | Description |
+|---|---|---|
+| POST | `/api/doctors/` | Create doctor |
+| GET | `/api/doctors/` | List doctors |
+| GET | `/api/doctors/<id>/` | Get doctor |
+| PUT | `/api/doctors/<id>/` | Update doctor |
+| DELETE | `/api/doctors/<id>/` | Delete doctor |
+
+### Mappings
+
+| Method | Endpoint | Description |
+|---|---|---|
+| POST | `/api/mappings/` | Create mapping |
+| GET | `/api/mappings/` | List mappings |
+| GET | `/api/mappings/<patient_id>/` | Get doctors for patient |
+| DELETE | `/api/mappings/<id>/` | Delete mapping |
+
+## Authentication
+
+The API uses JWT authentication.
+
+After login, include the access token in requests:
+
+```http
+Authorization: Bearer <access_token>
 ```
 
-### 3. Create Patient
-```bash
-curl -X POST http://127.0.0.1:8000/api/patients/ \
-  -H "Content-Type: application/json" \
-  -H "Authorization: Bearer <YOUR_ACCESS_TOKEN>" \
-  -d '{
-    "name": "John Doe",
-    "email": "john.doe@example.com",
-    "phone": "+1-555-0199",
-    "date_of_birth": "1988-11-23",
-    "gender": "Male",
-    "medical_history": "Hypertension"
-  }'
-```
+## Security
 
-### 4. Create Doctor
-```bash
-curl -X POST http://127.0.0.1:8000/api/doctors/ \
-  -H "Content-Type: application/json" \
-  -H "Authorization: Bearer <YOUR_ACCESS_TOKEN>" \
-  -d '{
-    "name": "Dr. Gregory House",
-    "email": "house@diagnostics.org",
-    "specialization": "Diagnostic Medicine",
-    "experience_years": 15,
-    "hospital_affiliation": "Princeton-Plainsboro"
-  }'
-```
+- JWT authentication
+- Password hashing using Django's authentication system
+- Object-level authorization
+- Patient ownership isolation
+- Environment-based secrets
+- Input validation
+- Database-level uniqueness constraints
 
-### 5. Assign Doctor to Patient
-```bash
-curl -X POST http://127.0.0.1:8000/api/mappings/ \
-  -H "Content-Type: application/json" \
-  -H "Authorization: Bearer <YOUR_ACCESS_TOKEN>" \
-  -d '{
-    "patient": 1,
-    "doctor": 1
-  }'
-```
+## Testing
 
-### 6. Get Doctors Assigned to Patient
-```bash
-curl -X GET http://127.0.0.1:8000/api/mappings/1/ \
-  -H "Authorization: Bearer <YOUR_ACCESS_TOKEN>"
-```
-
----
-
-## Running Automated Tests
-
-Run the Django test suite to execute unit and integration tests across all apps:
+Run:
 
 ```bash
 python manage.py test
 ```
 
----
+Testing includes:
+- Authentication
+- CRUD operations
+- Validation
+- Permissions
+- Patient ownership isolation
+- Patient-doctor mappings
 
-## Postman Collection
+## Postman
 
-Import `postman_collection.json` into Postman to test all endpoints. Set the `base_url` variable to `http://127.0.0.1:8000` and pass the returned `access_token` in headers.
+Import `postman_collection.json` into Postman to test all API endpoints.
+
+## Django Admin
+
+Create a superuser:
+
+```bash
+python manage.py createsuperuser
+```
+
+Admin panel:
+
+`/admin/`
