@@ -83,14 +83,22 @@ WSGI_APPLICATION = 'config.wsgi.application'
 ASGI_APPLICATION = 'config.asgi.application'
 
 # Database
-# Default to sqlite if DATABASE_URL is not set or points to sqlite
-DATABASE_URL = os.getenv('DATABASE_URL', f"sqlite:///{BASE_DIR / 'db.sqlite3'}")
+# PostgreSQL is the primary and required database engine for development and production.
+DB_NAME = os.getenv('DB_NAME', 'healthcare_db')
+DB_USER = os.getenv('DB_USER', 'postgres')
+DB_PASSWORD = os.getenv('DB_PASSWORD', 'postgres')
+DB_HOST = os.getenv('DB_HOST', 'localhost')
+DB_PORT = os.getenv('DB_PORT', '5432')
+
+DEFAULT_DB_URL = f"postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
+DATABASE_URL = os.getenv('DATABASE_URL', DEFAULT_DB_URL)
 
 DATABASES = {
     'default': dj_database_url.config(
         default=DATABASE_URL,
         conn_max_age=600,
         conn_health_checks=True,
+        engine='django.db.backends.postgresql',
     )
 }
 
