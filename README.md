@@ -4,7 +4,7 @@
 ![Django Framework](https://img.shields.io/badge/django-5.1-green.svg)
 ![DRF](https://img.shields.io/badge/django%20rest%20framework-3.15-red.svg)
 ![Authentication](https://img.shields.io/badge/auth-JWT%20(SimpleJWT)-orange.svg)
-![Database](https://img.shields.io/badge/database-PostgreSQL%20%7C%20SQLite-darkblue.svg)
+![Database](https://img.shields.io/badge/database-PostgreSQL-darkblue.svg)
 ![Build & Tests](https://img.shields.io/badge/tests-passing-brightgreen.svg)
 
 A production-grade, enterprise Django REST Framework (DRF) backend API for healthcare management systems. It provides robust user authentication, patient health records management, doctor directory indexing, and patient-doctor assignment mappings with tenant isolation, strict object-level authorization, input validation, and automated unit/integration tests.
@@ -36,7 +36,7 @@ A production-grade, enterprise Django REST Framework (DRF) backend API for healt
 
 - **Core Framework:** Python 3.11+ & Django 5.1
 - **API Engine:** Django REST Framework (DRF) 3.15+
-- **Database Engine:** PostgreSQL (with automatic SQLite fallback for local development)
+- **Database Engine:** PostgreSQL
 - **Authentication:** JSON Web Tokens (JWT) via `djangorestframework-simplejwt`
 - **Environment Management:** `python-dotenv` & `dj-database-url`
 - **Testing Framework:** Django TestRunner / `unittest`
@@ -51,7 +51,7 @@ A production-grade, enterprise Django REST Framework (DRF) backend API for healt
 - **Patient-Doctor Assignment Mappings:** Dynamic mapping model allowing patients to be assigned to specific doctors while enforcing uniqueness to prevent duplicate mappings.
 - **Strict Data Isolation & Ownership Controls:** Custom DRF permission classes (`IsOwnerOrAdmin`, `IsMappingOwnerOrAdmin`) ensuring strict data boundary enforcement across endpoints.
 - **Input Validation & Guardrails:** Serializer-level sanitization preventing invalid inputs, duplicate entries, or unauthorized relation bindings.
-- **PostgreSQL Ready:** Configured for cloud-native production deployment with environment-based connection strings.
+- **PostgreSQL Powered:** Enterprise PostgreSQL database backend for local development and production.
 - **Automated Test Suite:** Comprehensive coverage including user registration, login, token refresh, CRUD permissions, mapping constraints, and security isolation.
 
 ---
